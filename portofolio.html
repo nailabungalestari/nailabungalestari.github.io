@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow-x: hidden;
+        }
+
+        /* Navbar - Using Flexbox with Animation */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s;
+        }
+
+        .navbar:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .logo {
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: bold;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #667eea;
+            transform: scale(1.1);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat center;
+            background-size: cover;
+            z-index: -1;
+        }
+
+        .about-section {
+            background: #fff;
+            text-align: center;
+            border-radius: 20px;
+            margin: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .projects-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: #fff;
+        }
+
+        /* Skills Section (Tambahan untuk lebih menarik) */
+        .skills-section {
+            background: #fff;
+            text-align: center;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .skill-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-10px);
+        }
+
+        /* Projects Grid - Using CSS Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .project-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .project-link:hover {
+            color: #764ba2;
+        }
+
+        /* Modal for Projects */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            text-align: center;
+            animation: zoomIn 0.3s;
+        }
+
+        .close {
+            float: right;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* Footer - Using Flexbox */
+        .footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .social-links {
+            margin: 1rem 0;
+        }
+
+        .social-links a {
+            color: #fff;
+            margin: 0 1rem;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .social-links a:hover {
+            transform: rotate(360deg);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) { /* Mobile */
+            .navbar {
+                flex-direction: column;
+                padding: 0.5rem;
+            }
+            .nav-links {
+                flex-direction: column;
+                margin-top: 1rem;
+            }
+            .nav-links li {
+                margin: 0.5rem 0;
+            }
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            section {
+                padding: 3rem 1rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) { /* Tablet */
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) { /* Desktop */
+            .projects-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .skills-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">My Portfolio</div>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#pengalaman">Pengalaman</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="hero-section">
+            <div class="hero-content">
+                <h1>Naila Bunga Lestari</h1>
+                <p>Saya merupakan seorang mahasiswi prodi informatika.</p>
+                <a href="#pengalaman" class="cta-button" style="background: #fff; color: #667eea; padding: 1rem 2rem; border-radius: 25px; text-decoration: none; font-weight: bold; transition: background 0.3s;">Lihat Pengalaman Saya</a></a>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <h2>About Me</h2>
+            <p>Halo, saya Naila Bunga Lestari
+
+               Saya adalah mahasiswa baru program studi informatika di Universitas Sebelas Maret, yang sedang mengejar gelar Sarjana Informatika. Meskipun belum memiliki pengalaman kerja profesional, saya sangat antusias untuk belajar dan mengembangkan keterampilan di dunia IT. Minat utama saya dibidang ini antara lain analisis data, atau kecerdasan buatan, karena saya percaya teknologi dapat menyelesaikan masalah sehari-hari dan mendorong inovasi.
+               Di luar kuliah, saya suka berpartisipasi dalam komunitas IT online. Tujuan saya adalah membangun karir di bidang cybersecurity, sambil terus belajar dari proyek kecil dan tantangan baru. Mari terhubung jika Anda ingin berdiskusi tentang teknologi atau kolaborasi.</p>
+            <img src="aku.png.jpg" alt="Profile Picture" width="200" class="profile-img" style="border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+        </section>
+
+        <section id="skills" class="skills-section">
+            <h2>Skill</h2>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    <h3>Mengaplikasikan canva dan capcut untuk mengedit</h3>
+                </div>
+                <div class="skill-item">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    <h3>Manajemen waktu</h3>
+                </div>
+                <div class="skill-item">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    <h3>Bahasa C untuk pemrograman low</h3>
+                </div>
+                <div class="skill-item">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    <h3>Komunikaasi efektif dan ramah</h3>
+                </div>
+            </div>
+        <section id="pengalaman" class="projects-section">
+            <h2>Pengalaman</h2>
+            <div class="projects-grid">
+                <div class="project-card" onclick="">
+                    <img src="marching.jpg" alt="Pengalaman 1" width="200">
+                    <h3>pengalaman pertama: mengikuti marching band </h3>
+                    <p>Tmpil di event tertentu untuk memeriahkan acara.</p>
+                    <a href="#" class="project-link">Marching Band</a>
+                </div>
+                <div class="project-card" onclick="">
+                    <img src="pmr wira.jpg" alt="Pengalaman 2" width="200">
+                    <h3>Pengalaman 2: mengikuti pmre</h3>
+                    <p>sebagai relawan di sekolah.</p>
+                    <a href="#" class="project-link">Palang Merah Remaja</a>
+                </div>
+                <div class="project-card" onclick="">
+                    <img src="latih drumband.jpg" alt="Pengalaman 3" width="200">
+                    <h3>Pengalaman 3: mengjar anak SD</h3>
+                    <p>melatih dan mengajar di SD.</p>
+                    <a href="#" class="project-link">Pelatih Marching Band</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <footer id="contact" class="footer">
+        <div class="footer-content">
+            <p>Contact Me: <a href="https://www.instagram.com/na.bngalstr?igsh=MWE4emt6NHNvbHJtbg==" style="color: #667eea;">na.bngalstr</a></p>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/naila-bunga-lestari-074978382?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">LinkedIn: Naila Bunga Lestari </a>
+            </div>
+            <p>&copy; 2025 My Portfolio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <img id="modalImg" src="" alt="Project Image" style="width: 100%; border-radius: 10px; margin: 1rem 0;">
+            <p id="modalDesc"></p>
+        </div>
+    </div>
+
+    <script>
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Scroll-triggered Animations
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        });
+        sections.forEach(section => observer.observe(section));
+
+        // Modal Functions
+        function openModal(title, desc, imgSrc) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalDesc').textContent = desc;
+            document.getElementById('modalImg').src = imgSrc;
+            document.getElementById('projectModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('projectModal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
